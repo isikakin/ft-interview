@@ -30,6 +30,7 @@ func Init(cmd *cobra.Command, args []string) error {
 
 	api.GetQuestionsWithAnswers(e, questionRepository)
 	api.GetQuestionsWithSeparateAnswers(e, questionRepository, answerRepository)
+	api.GetQuestionsWithSeparateAnswersByQuestionId(e, questionRepository, answerRepository)
 	api.Finish(e, questionAnswerRepository)
 	api.CompareToOtherUsers(e, questionAnswerRepository)
 

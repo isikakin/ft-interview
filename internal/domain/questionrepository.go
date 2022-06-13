@@ -1,18 +1,21 @@
 package domain
 
 import (
+	"fmt"
 	"ft-interview/internal/domain/entity"
 	"ft-interview/pkg/cache"
 )
 
 const (
-	questionKey       = "questions"
-	separateQuestions = "separatequestions"
+	questionKey             = "questions"
+	separateQuestionsPrefix = "separatequestions_%d"
+	separateQuestions       = "separatequestions"
 )
 
 type QuestionRepository interface {
 	GetAll() []entity.Question
 	GetAllSeparateQuestions() []entity.SeparateQuestion
+	GetSeparateQuestionById(questionId int) *entity.SeparateQuestion
 }
 
 type questionRepository struct {
@@ -38,7 +41,25 @@ func (self *questionRepository) GetAllSeparateQuestions() []entity.SeparateQuest
 		return cached.([]entity.SeparateQuestion)
 	}
 
-	return self.initializeSeparateQuestions()
+	return self.initializeSeparateQuestions(0)
+}
+
+func (self *questionRepository) GetSeparateQuestionById(questionId int) *entity.SeparateQuestion {
+
+	cached, found := self.database.Retrieve(fmt.Sprintf(separateQuestionsPrefix, questionId))
+
+	if found {
+		founded := cached.(entity.SeparateQuestion)
+		return &founded
+	}
+
+	foundedQuestion := self.initializeSeparateQuestions(questionId)
+
+	if len(foundedQuestion) > 0 {
+		return &foundedQuestion[0]
+	}
+
+	return nil
 }
 
 func (self *questionRepository) initialize() (questions []entity.Question) {
@@ -61,16 +82,32 @@ func (self *questionRepository) initialize() (questions []entity.Question) {
 	return questions
 }
 
-func (self *questionRepository) initializeSeparateQuestions() (questions []entity.SeparateQuestion) {
+func (self *questionRepository) initializeSeparateQuestions(questionId int) (questions []entity.SeparateQuestion) {
 
 	questions = []entity.SeparateQuestion{
 		{Id: 1, Content: "question1"},
 		{Id: 2, Content: "question2"},
 	}
 
-	self.database.Set(separateQuestions, questions)
+	var searchQuestion *entity.SeparateQuestion
 
-	return questions
+	for _, question := range questions {
+		if question.Id == questionId {
+			searchQuestion = &question
+		}
+		self.database.Set(fmt.Sprintf(separateQuestionsPrefix, question.Id), question)
+	}
+
+	if questionId == 0 {
+		self.database.Set(separateQuestions, questions)
+		return questions
+	}
+
+	if searchQuestion == nil {
+		return nil
+	}
+
+	return []entity.SeparateQuestion{*searchQuestion}
 }
 
 func NewQuestionRepository(database cache.Cache) QuestionRepository {

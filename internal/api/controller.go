@@ -28,7 +28,7 @@ func GetQuestionsWithAnswers(e *echo.Echo, questionRepository domain.QuestionRep
 	})
 }
 
-//GetQuestionsWithSeparateAnswers get answers by question id like database struct
+//GetQuestionsWithSeparateAnswers get all question with answers by question id like database struct
 func GetQuestionsWithSeparateAnswers(e *echo.Echo, questionRepository domain.QuestionRepository, answerRepository domain.AnswerRepository) {
 	e.GET("v2/questions", func(c echo.Context) error {
 
@@ -65,6 +65,47 @@ func GetQuestionsWithSeparateAnswers(e *echo.Echo, questionRepository domain.Que
 		}
 
 		return c.JSON(http.StatusOK, response)
+	})
+}
+
+//GetQuestionsWithSeparateAnswersByQuestionId get one question with answer by questionId
+func GetQuestionsWithSeparateAnswersByQuestionId(e *echo.Echo, questionRepository domain.QuestionRepository, answerRepository domain.AnswerRepository) {
+	e.GET("questions/:questionId", func(c echo.Context) error {
+
+		var (
+			question *entity.SeparateQuestion
+		)
+
+		questionId, err := strconv.Atoi(c.Param("questionId"))
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, "Invalid questionId")
+		}
+
+		question = questionRepository.GetSeparateQuestionById(questionId)
+
+		if question == nil {
+			return c.NoContent(http.StatusNoContent)
+		}
+
+		var separateQuestion modal.SeparateQuestionResponse
+
+		separateQuestion.Id = question.Id
+		separateQuestion.Content = question.Content
+
+		var responseItem modal.SepareteQuestionResponseItem
+
+		answers := answerRepository.GetByQuestionId(question.Id)
+
+		for _, answer := range answers {
+			responseItem.QuestionId = question.Id
+			responseItem.Id = answer.Id
+			responseItem.Content = answer.Content
+
+			separateQuestion.Answers = append(separateQuestion.Answers, responseItem)
+		}
+
+		return c.JSON(http.StatusOK, separateQuestion)
 	})
 }
 
