@@ -110,7 +110,7 @@ func GetQuestionsWithSeparateAnswersByQuestionId(e *echo.Echo, questionRepositor
 }
 
 func Finish(e *echo.Echo, questionAnswerRepository domain.QuestionAnswerRepository) {
-	e.POST("questions", func(c echo.Context) error {
+	e.POST("questions/complete", func(c echo.Context) error {
 		var (
 			request = new(modal.FinishTestRequest)
 			err     error
@@ -149,7 +149,7 @@ func Finish(e *echo.Echo, questionAnswerRepository domain.QuestionAnswerReposito
 
 func CompareToOtherUsers(e *echo.Echo, questionAnswerRepository domain.QuestionAnswerRepository) {
 
-	e.GET("compare/:userId", func(c echo.Context) error {
+	e.GET("questions/compare/:userId", func(c echo.Context) error {
 
 		userId, err := strconv.Atoi(c.Param("userId"))
 
