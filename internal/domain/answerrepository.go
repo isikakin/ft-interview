@@ -24,7 +24,6 @@ func (self *answerRepository) GetByQuestionId(questionId int) []entity.Answer {
 
 	if found {
 		return cached.([]entity.Answer)
-
 	}
 
 	return self.initialize()
@@ -33,11 +32,12 @@ func (self *answerRepository) GetByQuestionId(questionId int) []entity.Answer {
 func (self *answerRepository) initialize() (answers []entity.Answer) {
 
 	answers = []entity.Answer{
-		{Id: 1, Content: "question1.1", QuestionId: 1},
-		{Id: 1, Content: "question1.2", QuestionId: 1},
-		{Id: 2, Content: "question2.1", QuestionId: 2},
-		{Id: 2, Content: "question2.2", QuestionId: 2},
-		{Id: 2, Content: "question2.3", QuestionId: 2},
+		{Id: 1, Content: "answer1", QuestionId: 1},
+		{Id: 2, Content: "answer2", QuestionId: 1},
+		{Id: 3, Content: "answer3", QuestionId: 1},
+		{Id: 4, Content: "answer1", QuestionId: 2},
+		{Id: 5, Content: "answer2", QuestionId: 2},
+		{Id: 6, Content: "answer3", QuestionId: 2},
 	}
 
 	groupingAnswer := groupingAnswerByQuestionId(answers)

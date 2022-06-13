@@ -32,7 +32,7 @@ func (self *questionRepository) GetAll() []entity.Question {
 
 func (self *questionRepository) GetAllSeparateQuestions() []entity.SeparateQuestion {
 
-	cached, found := self.database.Retrieve(questionKey)
+	cached, found := self.database.Retrieve(separateQuestions)
 
 	if found {
 		return cached.([]entity.SeparateQuestion)
