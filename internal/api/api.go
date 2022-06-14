@@ -17,7 +17,9 @@ func IsDuplicateAnswers(answers []modal.FinishTestRequestItem) bool {
 	return false
 }
 
-func FindUserOrderByCorrectAnswerCount(userId int, userAnswers map[int]int) (count int) {
+func CalculateSuccessPercentage(userId int, userAnswers map[int]int) float64 {
+
+	count := 0
 
 	for key, value := range userAnswers {
 		if key == userId {
@@ -29,5 +31,5 @@ func FindUserOrderByCorrectAnswerCount(userId int, userAnswers map[int]int) (cou
 		}
 	}
 
-	return count
+	return (float64(count) / float64(len(userAnswers))) * 100
 }

@@ -169,10 +169,8 @@ func CompareToOtherUsers(e *echo.Echo, questionAnswerRepository domain.QuestionA
 			return c.JSON(http.StatusBadRequest, "You don't have answers")
 		}
 
-		count := FindUserOrderByCorrectAnswerCount(userId, userAnswers)
-
-		percentage := (float64(count) / float64(len(userAnswers))) * 100
-
+		percentage := CalculateSuccessPercentage(userId, userAnswers)
+		
 		return c.String(http.StatusOK, fmt.Sprintf("You were better than  %.0f%% of all quizzers", percentage))
 	})
 }
