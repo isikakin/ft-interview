@@ -166,7 +166,7 @@ func CompareToOtherUsers(e *echo.Echo, questionAnswerRepository domain.QuestionA
 		userAnswers := questionAnswerRepository.GetUserAnswers()
 
 		if _, ok := userAnswers[userId]; !ok {
-			return c.JSON(http.StatusBadRequest, "soru çözmemişsin xd")
+			return c.JSON(http.StatusBadRequest, "You don't have answers")
 		}
 
 		userIndex := FindUserOrderByCorrectAnswerCount(userId, userAnswers)
