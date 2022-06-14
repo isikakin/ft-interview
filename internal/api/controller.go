@@ -110,12 +110,12 @@ func GetQuestionsWithSeparateAnswersByQuestionId(e *echo.Echo, questionRepositor
 			TotalCount        int
 		}{
 			SeparatedQuestion: separateQuestion,
-			TotalCount:        questionRepository.TotalCount(),
+			TotalCount:        questionRepository.TotalSeparatedCount(),
 		})
 	})
 }
 
-func Finish(e *echo.Echo, questionAnswerRepository domain.QuestionAnswerRepository) {
+func Finish(e *echo.Echo, questionRepository domain.QuestionRepository, questionAnswerRepository domain.QuestionAnswerRepository) {
 	e.POST("questions/complete", func(c echo.Context) error {
 		var (
 			request = new(modal.FinishTestRequest)
@@ -169,9 +169,9 @@ func CompareToOtherUsers(e *echo.Echo, questionAnswerRepository domain.QuestionA
 			return c.JSON(http.StatusBadRequest, "You don't have answers")
 		}
 
-		userIndex := FindUserOrderByCorrectAnswerCount(userId, userAnswers)
+		count := FindUserOrderByCorrectAnswerCount(userId, userAnswers)
 
-		percentage := (userIndex / float64(len(userAnswers))) * 100
+		percentage := (float64(count) / float64(len(userAnswers))) * 100
 
 		return c.String(http.StatusOK, fmt.Sprintf("You were better than  %.0f%% of all quizzers", percentage))
 	})

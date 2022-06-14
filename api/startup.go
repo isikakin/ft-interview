@@ -31,7 +31,7 @@ func Init(cmd *cobra.Command, args []string) error {
 	api.GetQuestionsWithAnswers(e, questionRepository)
 	api.GetQuestionsWithSeparateAnswers(e, questionRepository, answerRepository)
 	api.GetQuestionsWithSeparateAnswersByQuestionId(e, questionRepository, answerRepository)
-	api.Finish(e, questionAnswerRepository)
+	api.Finish(e, questionRepository, questionAnswerRepository)
 	api.CompareToOtherUsers(e, questionAnswerRepository)
 
 	if err := e.Start(fmt.Sprintf(":%s", "5000")); err != nil {

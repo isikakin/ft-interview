@@ -16,6 +16,7 @@ type QuestionRepository interface {
 	GetAll() []entity.Question
 	GetAllSeparateQuestions() []entity.SeparateQuestion
 	GetSeparateQuestionById(questionId int) *entity.SeparateQuestion
+	TotalSeparatedCount() int
 	TotalCount() int
 }
 
@@ -46,6 +47,21 @@ func (self *questionRepository) GetAllSeparateQuestions() []entity.SeparateQuest
 }
 
 func (self *questionRepository) TotalCount() int {
+
+	var questions []entity.Question
+
+	cached, found := self.database.Retrieve(separateQuestions)
+
+	if found {
+		questions = cached.([]entity.Question)
+	}
+
+	questions = self.initialize()
+
+	return len(questions)
+}
+
+func (self *questionRepository) TotalSeparatedCount() int {
 
 	var questions []entity.SeparateQuestion
 
@@ -90,6 +106,21 @@ func (self *questionRepository) initialize() (questions []entity.Question) {
 			{Id: 4, QuestionId: 2, Content: "answer1"},
 			{Id: 5, QuestionId: 2, Content: "answer2"},
 			{Id: 6, QuestionId: 2, Content: "answer3"},
+		}},
+		{Id: 3, Content: "question2", Answers: []entity.Answer{
+			{Id: 7, QuestionId: 2, Content: "answer1"},
+			{Id: 8, QuestionId: 2, Content: "answer2"},
+			{Id: 9, QuestionId: 2, Content: "answer3"},
+		}},
+		{Id: 4, Content: "question2", Answers: []entity.Answer{
+			{Id: 10, QuestionId: 2, Content: "answer1"},
+			{Id: 11, QuestionId: 2, Content: "answer2"},
+			{Id: 12, QuestionId: 2, Content: "answer3"},
+		}},
+		{Id: 5, Content: "question2", Answers: []entity.Answer{
+			{Id: 13, QuestionId: 2, Content: "answer1"},
+			{Id: 14, QuestionId: 2, Content: "answer2"},
+			{Id: 15, QuestionId: 2, Content: "answer3"},
 		}},
 	}
 

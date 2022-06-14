@@ -24,7 +24,10 @@ func (self *questionAnswerRepository) initialize() {
 
 	answers := []entity.QuestionAnswer{
 		{QuestionId: 1, CorrectAnswerId: 1},
-		{QuestionId: 2, CorrectAnswerId: 3},
+		{QuestionId: 2, CorrectAnswerId: 1},
+		{QuestionId: 3, CorrectAnswerId: 1},
+		{QuestionId: 4, CorrectAnswerId: 1},
+		{QuestionId: 5, CorrectAnswerId: 1},
 	}
 
 	for _, answer := range answers {

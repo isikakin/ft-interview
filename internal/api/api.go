@@ -2,7 +2,6 @@ package api
 
 import (
 	"ft-interview/internal/api/modal"
-	"sort"
 )
 
 func IsDuplicateAnswers(answers []modal.FinishTestRequestItem) bool {
@@ -18,23 +17,17 @@ func IsDuplicateAnswers(answers []modal.FinishTestRequestItem) bool {
 	return false
 }
 
-func FindUserOrderByCorrectAnswerCount(userId int, userAnswers map[int]int) (index float64) {
+func FindUserOrderByCorrectAnswerCount(userId int, userAnswers map[int]int) (count int) {
 
-	keys := make([]int, 0, len(userAnswers))
-	for key, _ := range userAnswers {
-		keys = append(keys, key)
-	}
-
-	sort.SliceStable(keys, func(i, j int) bool {
-		return userAnswers[keys[i]] < userAnswers[keys[j]]
-	})
-
-	for _, k := range keys {
-		if k == userId {
-			break
+	for key, value := range userAnswers {
+		if key == userId {
+			continue
 		}
-		index++
+
+		if userAnswers[userId] > value {
+			count++
+		}
 	}
 
-	return index
+	return count
 }
