@@ -16,6 +16,7 @@ type QuestionRepository interface {
 	GetAll() []entity.Question
 	GetAllSeparateQuestions() []entity.SeparateQuestion
 	GetSeparateQuestionById(questionId int) *entity.SeparateQuestion
+	TotalCount() int
 }
 
 type questionRepository struct {
@@ -42,6 +43,21 @@ func (self *questionRepository) GetAllSeparateQuestions() []entity.SeparateQuest
 	}
 
 	return self.initializeSeparateQuestions(0)
+}
+
+func (self *questionRepository) TotalCount() int {
+
+	var questions []entity.SeparateQuestion
+
+	cached, found := self.database.Retrieve(separateQuestions)
+
+	if found {
+		questions = cached.([]entity.SeparateQuestion)
+	}
+
+	questions = self.initializeSeparateQuestions(0)
+
+	return len(questions)
 }
 
 func (self *questionRepository) GetSeparateQuestionById(questionId int) *entity.SeparateQuestion {

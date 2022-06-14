@@ -105,7 +105,13 @@ func GetQuestionsWithSeparateAnswersByQuestionId(e *echo.Echo, questionRepositor
 			separateQuestion.Answers = append(separateQuestion.Answers, responseItem)
 		}
 
-		return c.JSON(http.StatusOK, separateQuestion)
+		return c.JSON(http.StatusOK, struct {
+			SeparatedQuestion modal.SeparateQuestionResponse
+			TotalCount        int
+		}{
+			SeparatedQuestion: separateQuestion,
+			TotalCount:        questionRepository.TotalCount(),
+		})
 	})
 }
 
